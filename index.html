@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ReactJS Course Index</title>
+  <style>
+    /* Reset & base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background: #f5f7fa;
+      color: #333;
+      display: flex;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* Sidebar */
+    aside {
+      background-color: #2c3e50;
+      color: #ecf0f1;
+      width: 280px;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    aside h2 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 1.2rem;
+      border-bottom: 2px solid #e67e22;
+      padding-bottom: 0.4rem;
+    }
+
+    aside ul {
+      list-style: none;
+    }
+
+    aside ul li {
+      margin: 0.8rem 0;
+    }
+
+    aside ul li a {
+      color: #ecf0f1;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    aside ul li a:hover {
+      color: #e67e22;
+    }
+
+    /* Main content */
+    main {
+      flex: 1;
+      padding: 3rem 4rem;
+      background: white;
+      border-radius: 10px 0 0 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    main h1 {
+      font-size: 3rem;
+      color: #34495e;
+      margin-bottom: 1rem;
+    }
+
+    main p {
+      font-size: 1.3rem;
+      color: #7f8c8d;
+      margin-bottom: 2.5rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    nav a {
+      background: #e67e22;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-decoration: none;
+      box-shadow: 0 4px 8px rgba(230,126,34,0.4);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    nav a:hover {
+      background: #d35400;
+      box-shadow: 0 6px 12px rgba(211,84,0,0.6);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      aside {
+        width: 100%;
+        border-radius: 0 0 10px 10px;
+        padding: 1rem 2rem;
+      }
+      main {
+        border-radius: 10px 10px 0 0;
+        padding: 2rem 1.5rem;
+      }
+      nav {
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <aside>
+    <h2>References</h2>
+    <ul id="referencesList">
+      <!-- JS will populate this -->
+    </ul>
+  </aside>
+
+  <main>
+    <h1>ReactJS Course</h1>
+    <p>Welcome! Select a unit to start learning ReactJS.</p>
+    <nav id="unitLinks">
+      <!-- JS will populate this -->
+    </nav>
+  </main>
+
+  <script>
+    // Unit pages list (you can update this easily)
+    const units = [
+      { name: 'Unit 1: Introduction to React', file: 'unit1.html' },
+      { name: 'Unit 2: Components & Props', file: 'unit2.html' },
+      { name: 'Unit 3: State & Lifecycle', file: 'unit3.html' },
+      { name: 'Unit 4: Hooks & Advanced Topics', file: 'unit4.html' }
+    ];
+
+    // References list (github repos, sites etc.)
+    const references = [
+      { name: 'React Official Docs', url: 'https://reactjs.org/docs/getting-started.html' },
+      { name: 'React GitHub Repo', url: 'https://github.com/facebook/react' },
+      { name: 'Awesome React', url: 'https://github.com/enaqx/awesome-react' },
+      { name: 'MDN Web Docs', url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript' }
+    ];
+
+    // Populate unit links nav
+    const nav = document.getElementById('unitLinks');
+    units.forEach(unit => {
+      const a = document.createElement('a');
+      a.href = unit.file;
+      a.textContent = unit.name;
+      nav.appendChild(a);
+    });
+
+    // Populate references sidebar
+    const refList = document.getElementById('referencesList');
+    references.forEach(ref => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = ref.url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.textContent = ref.name;
+      li.appendChild(a);
+      refList.appendChild(li);
+    });
+  </script>
+</body>
+</html>
