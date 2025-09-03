@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core JavaScript Concepts Guide</title>
+    <!-- Chosen Palette: Cool Blues & Greys -->
+    <!-- Application Structure Plan: The application uses a fixed sidebar navigation and a main content area. This structure was chosen to provide a non-linear, intuitive learning experience, allowing students to easily jump between different JavaScript concepts without scrolling through a long document. Clicking a concept in the sidebar dynamically displays the corresponding detailed explanation, simple example, and project-specific code snippet in the main content area. This task-oriented design (reviewing a specific concept) is more user-friendly for a reference tool than a linear report. -->
+    <!-- Visualization & Content Choices: The primary method of information presentation is structured text and styled code blocks. No data charts are necessary for this content. Report Info: JS concept explanation -> Goal: Inform/Organize -> Presentation: Themed cards with distinct sections for explanation and code examples -> Interaction: Sidebar navigation click to show/hide content sections -> Justification: This approach provides a clear, consistent, and easily navigable structure for educational content, focusing user attention on one concept at a time. Method: Vanilla JS for DOM manipulation. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .active-nav {
+            color: #0891b2;
+            font-weight: 600;
+            border-left-color: #0891b2;
+        }
+        .code-block {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', "Courier New", monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <aside class="w-full md:w-64 bg-white md:bg-transparent p-4 md:p-6 border-b md:border-b-0 md:border-r border-slate-200">
+            <h1 class="text-xl font-bold text-cyan-700 mb-6">JS Concepts</h1>
+            <nav id="navigation">
+            </nav>
+        </aside>
+        
+        <main id="main-content" class="flex-1 p-4 md:p-8 lg:p-12">
+        </main>
+    </div>
+
+    <script>
+        const concepts = [
+            {
+                id: 'variables',
+                title: 'Variables (const & let)',
+                explanation: "In modern JavaScript, we use `const` and `let` to declare variables. `const` is for values that won't be reassigned, making your code safer and more predictable. `let` is for variables whose values might need to change.",
+                simpleExample: `const name = "Alice"; // Cannot be changed\nlet age = 10;\nage = 11; // This is okay`,
+                projectExample: `// From: src/App.js\n\n// 'filted_movies' holds the result of the filter operation.\n// It doesn't get reassigned in this scope.\nconst filted_movies = this.state.movies.filter(movie => {\n    return movie.name.toLowerCase().includes(this.state.searchValue.toLowerCase());\n});`,
+                referenceUrl: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#declarations'
+            },
+            {
+                id: 'arrow-functions',
+                title: 'Arrow Functions',
+                explanation: "Arrow functions (`=>`) are a shorter way to write functions. They are especially useful for callbacks in array methods and in class components, as they automatically handle the `this` context, preventing common bugs.",
+                simpleExample: `// Regular function\nfunction add(a, b) {\n  return a + b;\n}\n\n// Arrow function\nconst addArrow = (a, b) => a + b;`,
+                projectExample: `// From: src/App.js\n// As a class method, this avoids 'this' binding issues.\nsearchChange = (e) => {\n    this.setState({ searchValue: e.target.value });\n}\n\n// From: src/moviecard.js\n// As a stateless functional component.\nconst Movie = ({name, genre, url}) => {\n   return (/* ... JSX content ... */);\n}`,
+                referenceUrl: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions'
+            },
+            {
+                id: 'array-methods',
+                title: 'Array Methods',
+                explanation: "Array methods like `.map()` and `.filter()` are powerful tools for working with lists of data without writing loops. They are fundamental to functional programming in JavaScript and are used extensively in React to transform data into UI elements.",
+                simpleExample: `const numbers = [1, 2, 3, 4, 5, 6];\n\n// Filter for even numbers\nconst evens = numbers.filter(num => num % 2 === 0); // [2, 4, 6]\n\n// Double every number\nconst doubled = numbers.map(num => num * 2); // [2, 4, 6, 8, 10, 12]`,
+                projectExample: `// From: src/moviecardlist.js\n// You used .map() to transform your array of movie data\n// into an array of React <Movie /> components.\nconst cardComponet = movies.map((movie, index) => {\n    return (\n        <Movie key={index} name={movie.name} url={movie.bannerUrl} genre={movie.genre} />\n    );\n});`,
+                referenceUrl: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array'
+            },
+            {
+                id: 'modules',
+                title: 'Modules (import/export)',
+                explanation: "Modules allow you to split your code into separate, reusable files. This keeps your project organized and maintainable. `export` makes code available to other files, and `import` brings that code in where you need it.",
+                simpleExample: `// In a file named math.js\nexport const add = (a, b) => a + b;\n\n// In another file, main.js\nimport { add } from './math.js';\nconsole.log(add(2, 3)); // 5`,
+                projectExample: `// From: src/movies.js\nexport const movies = [ /* ... movie data ... */ ];\n\n// From: src/App.js\nimport React, { Component } from 'react';\nimport SearchBox from './searchbox';\nimport { movies } from './movies';`,
+                referenceUrl: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules'
+            },
+            {
+                id: 'destructuring',
+                title: 'Destructuring',
+                explanation: "Destructuring is a convenient way to extract values from objects or arrays into distinct variables. In React, it's commonly used to pull properties out of the `props` object, making your component code cleaner and easier to read.",
+                simpleExample: `const person = {\n  firstName: "John",\n  lastName: "Doe"\n};\n\n// You can do this:\nconst { firstName, lastName } = person;`,
+                projectExample: `// From: src/moviecard.js\n\n// Instead of writing 'props.name', you destructure\n// the props object directly in the function signature.\nconst Movie = ({name, genre, url}) => {\n    return (\n        <div>\n            <h2>{name}</h2>\n            <p>{genre}</p>\n        </div>\n    )\n}`,
+                referenceUrl: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment'
+            },
+            {
+                id: 'classes',
+                title: 'Classes',
+                explanation: "A `class` is a blueprint for creating objects. In React, class components are used to manage state and lifecycle methods. They `extend React.Component` to inherit React's component functionality.",
+                simpleExample: `class Dog {\n  constructor(name) {\n    this.name = name;\n  }\n\n  bark() {\n    console.log(\`Woof! My name is \${this.name}\`);\n  }\n}\n\nconst myDog = new Dog("Rex");\nmyDog.bark(); // "Woof! My name is Rex"`,
+                projectExample: `// From: src/App.js\nclass App extends Component {\n    constructor() {\n        super();\n        this.state = {\n            searchValue: '',\n            movies: movies\n        };\n    }\n\n    render() {\n        // ... JSX that uses this.state ...\n    }\n}`,
+                referenceUrl: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes'
+            },
+            {
+                id: 'ternary-operator',
+                title: 'Ternary Operator',
+                explanation: "The ternary operator is a compact alternative to an `if...else` statement. Its concise syntax (`condition ? exprIfTrue : exprIfFalse`) makes it perfect for embedding conditional logic directly within JSX.",
+                simpleExample: `const age = 20;\nconst message = age >= 18 ? "You can vote." : "You cannot vote yet.";\nconsole.log(message); // "You can vote."`,
+                projectExample: `// A potential addition to App.js's render method\nrender() {\n    const { movies, searchValue } = this.state;\n    const filted_movies = movies.filter(/*...*/);\n\n    return (\n        <div>\n            {/* ... other elements ... */}\n            {\n                filted_movies.length > 0\n                ? <MovieCard movies={filted_movies} />\n                : <h2>Sorry, no movies match your search.</h2>\n            }\n        </div>\n    );\n}`,
+                referenceUrl: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator'
+            },
+            {
+                id: 'spread-operator',
+                title: 'Spread Operator',
+                explanation: "The spread operator (`...`) expands an iterable (like an array or object) into its individual elements. It's essential in React for updating state immutably—creating copies of state objects or arrays and then modifying the copy.",
+                simpleExample: `const originalArray = ['a', 'b'];\nconst newArray = [...originalArray, 'c', 'd']; // ['a', 'b', 'c', 'd']\n\nconst originalObject = { name: 'Bob', age: 30 };\nconst newObject = { ...originalObject, city: 'London' };`,
+                projectExample: `// A potential "add movie" method for App.js\naddNewMovie = () => {\n    const newMovie = { id: 31, name: 'New Movie' };\n\n    // We create a NEW array by spreading the old one\n    // and adding the new movie to the end.\n    this.setState({\n        movies: [...this.state.movies, newMovie]\n    });\n}`,
+                referenceUrl: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax'
+            }
+        ];
+
+        const navigation = document.getElementById('navigation');
+        const mainContent = document.getElementById('main-content');
+
+        function renderContent() {
+            let navHTML = '<ul class="space-y-2">';
+            let contentHTML = '';
+
+            concepts.forEach((concept, index) => {
+                navHTML += `
+                    <li>
+                        <a href="#" data-target="${concept.id}" class="nav-link block p-3 rounded-lg text-slate-600 hover:text-cyan-600 border-l-4 border-transparent transition-all duration-200 ${index === 0 ? 'active-nav' : ''}">
+                            ${concept.title}
+                        </a>
+                    </li>
+                `;
+                contentHTML += `
+                    <div id="${concept.id}" class="content-section space-y-8 ${index === 0 ? 'active' : ''}">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                            <h2 class="text-2xl font-bold text-cyan-800 mb-3">What is it?</h2>
+                            <p class="text-slate-600 leading-relaxed">${concept.explanation.replace(/`([^`]+)`/g, '<code class="bg-gray-200 text-gray-800 font-mono py-0.5 px-1.5 rounded-md text-sm">$&</code>').replace(/`/g, '')}</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                            <h3 class="text-xl font-semibold text-cyan-800 mb-3">Simple Example</h3>
+                            <div class="code-block"><pre><code>${concept.simpleExample}</code></pre></div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                            <h3 class="text-xl font-semibold text-cyan-800 mb-3">In Your Movie Project</h3>
+                            <div class="code-block"><pre><code>${concept.projectExample}</code></pre></div>
+                        </div>
+                        <div class="mt-4 text-sm">
+                            <a href="${concept.referenceUrl}" target="_blank" class="text-cyan-600 hover:underline">Learn More &rarr;</a>
+                        </div>
+                    </div>
+                `;
+            });
+
+            navHTML += '</ul>';
+            navigation.innerHTML = navHTML;
+            mainContent.innerHTML = contentHTML;
+        }
+
+        function handleNavClick(event) {
+            event.preventDefault();
+            const link = event.target.closest('.nav-link');
+            if (!link) return;
+
+            const targetId = link.dataset.target;
+            
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active-nav'));
+            link.classList.add('active-nav');
+
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+                if (section.id === targetId) {
+                    section.classList.add('active');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderContent();
+            navigation.addEventListener('click', handleNavClick);
+        });
+    </script>
+</body>
+</html>
